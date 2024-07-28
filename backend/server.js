@@ -25,3 +25,10 @@ app.get('/', (req, res) => {
 const authRoutes = require('./routes/auth');
 // other middlewares and routes
 app.use('/api/auth', authRoutes);
+// backend/server.js
+
+const profileRoutes = require('./routes/profile');
+// other middlewares and routes
+app.use('/api/profile', profileRoutes);
+const middlewareRoutes = require('./routes/middleware');
+app.use('/api/middleware', middlewareRoutes);
