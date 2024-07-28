@@ -1,21 +1,44 @@
 // backend/models/User.js
 
-const mongoose = require('mongoose');
 
-const UserSchema = new mongoose.Schema({
+const { Sequelize, DataTypes } = require('sequelize');
+const db = require('./index');
+
+const User = db.sequelize.define('User', {
     name: {
-        type: String,
-        required: true
+        type: DataTypes.STRING,
+        allowNull: false
     },
     email: {
-        type: String,
-        required: true,
+        type: DataTypes.STRING,
+        allowNull: false,
         unique: true
     },
     password: {
-        type: String,
-        required: true
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    bio: {
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
+    bandPicture: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    video: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    socialMediaLinks: {
+        type: DataTypes.JSON,
+        allowNull: true
+    },
+    streamingData: {
+        type: DataTypes.JSON,
+        allowNull: true
     }
-}, { timestamps: true });
+});
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = User;
+
