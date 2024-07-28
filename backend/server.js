@@ -32,3 +32,10 @@ const profileRoutes = require('./routes/profile');
 app.use('/api/profile', profileRoutes);
 const middlewareRoutes = require('./routes/middleware');
 app.use('/api/middleware', middlewareRoutes);
+
+
+const gigRoutes = require('./routes/gigs');
+const submissionRoutes = require('./routes/submissions');
+
+app.use('/api/gigs', gigRoutes);
+app.use('/api/submissions', submissionRoutes);
