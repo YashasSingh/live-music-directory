@@ -3,6 +3,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import Notifications from './Notifications';
 
 const Container = styled.div`
     display: flex;
@@ -49,6 +50,7 @@ const Layout = ({ children }) => {
                 <Link to="/submissions">Submissions</Link>
             </Nav>
             <Main>{children}</Main>
+            <Notifications />
             <Footer>© 2024 Music Directory</Footer>
         </Container>
     );
