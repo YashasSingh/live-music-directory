@@ -10,6 +10,7 @@ const profileRoutes = require('./routes/profile');
 const profilesRoutes = require('./routes/profiles');
 const gigRoutes = require('./routes/gigs');
 const submissionRoutes = require('./routes/submissions');
+const commentsRoutes = require('./routes/comments');
 
 const app = express();
 const server = http.createServer(app);
@@ -26,6 +27,7 @@ app.use('/api/profile', profileRoutes);
 app.use('/api/profiles', profilesRoutes);
 app.use('/api/gigs', gigRoutes);
 app.use('/api/submissions', submissionRoutes);
+app.use('/api/comments', commentsRoutes);
 
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {
@@ -61,6 +63,7 @@ const simulateStatusUpdate = () => {
         }
     }, 10000); // Update every 10 seconds for demo purposes
 };
+
 // Start server
 const PORT = process.env.PORT || 5000;
 sequelize.sync().then(() => {
