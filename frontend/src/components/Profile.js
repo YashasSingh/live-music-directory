@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 import UploadFile from './UploadFile';
+import Comments from './Comments';
 
 const ProfileContainer = styled.div`
     display: flex;
@@ -67,6 +68,7 @@ const Profile = () => {
             </ProfileItem>
             <UploadFile type="image" onUpload={handleImageUpload} />
             <UploadFile type="video" onUpload={handleVideoUpload} />
+            <Comments profileId={profile.id} />
         </ProfileContainer>
     );
 };
