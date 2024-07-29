@@ -7,19 +7,22 @@ import Profile from './components/Profile';
 import Gigs from './components/Gigs';
 import Submissions from './components/Submissions';
 import GlobalStyle from './globalStyles';
+import { NotificationProvider } from './context/NotificationContext';
 
 const App = () => {
     return (
         <Router>
             <GlobalStyle />
-            <Layout>
-                <Routes>
-                    <Route path="/profile" element={<Profile />} />
-                    <Route path="/gigs" element={<Gigs />} />
-                    <Route path="/submissions" element={<Submissions />} />
-                    <Route path="/" element={<h2>Welcome to the Music Directory</h2>} />
-                </Routes>
-            </Layout>
+            <NotificationProvider>
+                <Layout>
+                    <Routes>
+                        <Route path="/profile" element={<Profile />} />
+                        <Route path="/gigs" element={<Gigs />} />
+                        <Route path="/submissions" element={<Submissions />} />
+                        <Route path="/" element={<h2>Welcome to the Music Directory</h2>} />
+                    </Routes>
+                </Layout>
+            </NotificationProvider>
         </Router>
     );
 };
