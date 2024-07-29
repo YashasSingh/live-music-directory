@@ -5,7 +5,6 @@ const http = require('http');
 const { Server } = require('socket.io');
 const path = require('path');
 const bodyParser = require('body-parser');
-const { Sequelize } = require('sequelize');
 const sequelize = require('./config/db');
 const profileRoutes = require('./routes/profile');
 const profilesRoutes = require('./routes/profiles');
@@ -18,6 +17,9 @@ const io = new Server(server);
 
 // Body parser middleware
 app.use(bodyParser.json());
+
+// Serve static files
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Define routes
 app.use('/api/profile', profileRoutes);
@@ -59,7 +61,6 @@ const simulateStatusUpdate = () => {
         }
     }, 10000); // Update every 10 seconds for demo purposes
 };
-
 // Start server
 const PORT = process.env.PORT || 5000;
 sequelize.sync().then(() => {
