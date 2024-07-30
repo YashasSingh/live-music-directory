@@ -66,6 +66,15 @@ const simulateStatusUpdate = () => {
 const spotifyRoutes = require('./routes/spotify');
 
 
+
+const likesRoutes = require('./routes/likes');
+
+
+
+
+app.use('/api/likes', likesRoutes);
+
+
 app.use('/api/spotify', spotifyRoutes);
 
 // Start server
