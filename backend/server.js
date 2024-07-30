@@ -63,6 +63,10 @@ const simulateStatusUpdate = () => {
         }
     }, 10000); // Update every 10 seconds for demo purposes
 };
+const spotifyRoutes = require('./routes/spotify');
+
+
+app.use('/api/spotify', spotifyRoutes);
 
 // Start server
 const PORT = process.env.PORT || 5000;
