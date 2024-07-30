@@ -19,7 +19,7 @@ router.get('/', auth, async (req, res) => {
 
 // Update user profile
 router.put('/', auth, async (req, res) => {
-    const { bio, bandPicture, videos, socialMediaLinks, streamingData } = req.body;
+    const { bio, bandPicture, video, socialMediaLinks, streamingData } = req.body;
 
     try {
         let user = await User.findByPk(req.user.id);
@@ -29,7 +29,7 @@ router.put('/', auth, async (req, res) => {
 
         user.bio = bio || user.bio;
         user.bandPicture = bandPicture || user.bandPicture;
-        user.videos = videos || user.videos;
+        user.video = video || user.video;
         user.socialMediaLinks = socialMediaLinks || user.socialMediaLinks;
         user.streamingData = streamingData || user.streamingData;
 

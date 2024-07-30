@@ -1,7 +1,7 @@
 // backend/models/Like.js
 
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/db');
+const { sequelize } = require('../config/db');
 const User = require('./User');
 
 const Like = sequelize.define('Like', {

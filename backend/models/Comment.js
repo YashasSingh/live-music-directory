@@ -1,26 +1,21 @@
 // backend/models/Comment.js
 
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/db');
-const User = require('./User');
+const { Sequelize, DataTypes } = require('sequelize');
+const { sequelize } = require('../config/db');
 
 const Comment = sequelize.define('Comment', {
-    content: {
-        type: DataTypes.TEXT,
-        allowNull: false,
+    text: {
+        type: DataTypes.STRING,
+        allowNull: false
     },
     userId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-            model: User,
-            key: 'id',
-        },
+        allowNull: false
     },
     profileId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-    },
+        allowNull: false
+    }
 });
 
 module.exports = Comment;
