@@ -1,19 +1,16 @@
 // backend/server.js
-
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const path = require('path');
 const bodyParser = require('body-parser');
-const { sequelize, connectDB } = require('./config/db');
+const { sequelize } = require('./config/db');
 const profileRoutes = require('./routes/profile');
 const profilesRoutes = require('./routes/profiles');
 const gigRoutes = require('./routes/gigs');
 const submissionRoutes = require('./routes/submissions');
 const commentsRoutes = require('./routes/comments');
-const likesRoutes = require('./routes/likes');
-const spotifyRoutes = require('./routes/spotify');
-const Submission = require('./models/Submission'); // Import the Submission model
+const authRoutes = require('./routes/auth');
 
 const app = express();
 const server = http.createServer(app);
@@ -31,8 +28,7 @@ app.use('/api/profiles', profilesRoutes);
 app.use('/api/gigs', gigRoutes);
 app.use('/api/submissions', submissionRoutes);
 app.use('/api/comments', commentsRoutes);
-app.use('/api/likes', likesRoutes);
-app.use('/api/spotify', spotifyRoutes);
+app.use('/api/auth', authRoutes);
 
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {
@@ -59,29 +55,21 @@ const notifyStatusUpdate = (submission) => {
 // Mock function to simulate status update
 const simulateStatusUpdate = () => {
     setInterval(async () => {
-        try {
-            const submissions = await Submission.findAll();
-            if (submissions.length > 0) {
-                const submission = submissions[Math.floor(Math.random() * submissions.length)];
-                submission.status = submission.status === 'pending' ? 'approved' : 'pending';
-                await submission.save();
-                notifyStatusUpdate(submission);
-            }
-        } catch (err) {
-            console.error('Error in simulateStatusUpdate:', err.message);
+        const submissions = await Submission.findAll();
+        if (submissions.length > 0) {
+            const submission = submissions[Math.floor(Math.random() * submissions.length)];
+            submission.status = submission.status === 'Pending' ? 'Approved' : 'Pending';
+            await submission.save();
+            notifyStatusUpdate(submission);
         }
     }, 10000); // Update every 10 seconds for demo purposes
 };
-// backend/server.js
 
-const testRoutes = require('./routes/test');
+const spotifyRoutes = require('./routes/spotify');
+const likesRoutes = require('./routes/likes');
 
-// other code...
-
-app.use('/api/test', testRoutes);
-
-// other code...
-
+app.use('/api/likes', likesRoutes);
+app.use('/api/spotify', spotifyRoutes);
 
 // Start server
 const PORT = process.env.PORT || 5000;

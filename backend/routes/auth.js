@@ -1,74 +1,39 @@
 // backend/routes/auth.js
-
 const express = require('express');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
-const db = require('../models');
+const { readUsers, saveUser } = require('../utils/csvHandler');
 
 const router = express.Router();
 
-// Register user
-router.post('/register', async (req, res) => {
-    const { name, email, password } = req.body;
-    try {
-        let user = await User.findOne({ where: { email } });
-        if (user) {
-            return res.status(400).json({ msg: 'User already exists' });
-        }
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
+// Login route
+router.post('/login', async (req, res) => {
+    const { username, password } = req.body;
+    if (username === 'admin' && password === 'admin') {
+        return res.json({ success: true, message: 'Admin login successful' });
+    }
 
-        user = await User.create({
-            name,
-            email,
-            password: hashedPassword
-        });
+    const users = await readUsers();
+    const user = users.find((u) => u.username === username && u.password === password);
 
-        const payload = {
-            user: {
-                id: user.id
-            }
-        };
-
-        jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' }, (err, token) => {
-            if (err) throw err;
-            res.json({ token });
-        });
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server error');
+    if (user) {
+        return res.json({ success: true, message: 'User login successful' });
+    } else {
+        return res.status(400).json({ success: false, message: 'Invalid credentials' });
     }
 });
 
-// Login user
-router.post('/login', async (req, res) => {
-    const { email, password } = req.body;
-    try {
-        let user = await User.findOne({ where: { email } });
-        if (!user) {
-            return res.status(400).json({ msg: 'Invalid credentials' });
-        }
+// Signup route
+router.post('/signup', async (req, res) => {
+    const { username, password } = req.body;
 
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            return res.status(400).json({ msg: 'Invalid credentials' });
-        }
+    const users = await readUsers();
+    const userExists = users.some((u) => u.username === username);
 
-        const payload = {
-            user: {
-                id: user.id
-            }
-        };
-
-        jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' }, (err, token) => {
-            if (err) throw err;
-            res.json({ token });
-        });
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server error');
+    if (userExists) {
+        return res.status(400).json({ success: false, message: 'User already exists' });
     }
+
+    await saveUser(username, password);
+    res.json({ success: true, message: 'User registered successfully' });
 });
 
 module.exports = router;

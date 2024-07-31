@@ -1,19 +1,18 @@
-// frontend/src/components/Login.js
+// frontend/src/components/Signup.js
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const Login = () => {
+const Signup = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
 
-    const handleLogin = async () => {
+    const handleSignup = async () => {
         try {
-            const res = await axios.post('/api/auth/login', { username, password });
+            const res = await axios.post('/api/auth/signup', { username, password });
             if (res.data.success) {
-                localStorage.setItem('token', res.data.token);
-                navigate('/gigs');
+                navigate('/login');
             }
         } catch (err) {
             console.error(err.response.data.message);
@@ -22,7 +21,7 @@ const Login = () => {
 
     return (
         <div>
-            <h2>Login</h2>
+            <h2>Signup</h2>
             <input
                 type="text"
                 placeholder="Username"
@@ -35,9 +34,9 @@ const Login = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
             />
-            <button onClick={handleLogin}>Login</button>
+            <button onClick={handleSignup}>Signup</button>
         </div>
     );
 };
 
-export default Login;
+export default Signup;

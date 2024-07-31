@@ -1,22 +1,18 @@
 // backend/models/Submission.js
-
-const { Sequelize, DataTypes } = require('sequelize');
-const db = require('./index');
+const { DataTypes } = require('sequelize');
+const { sequelize } = require('../config/db');
 const User = require('./User');
 const Gig = require('./Gig');
 
-const Submission = db.sequelize.define('Submission', {
+const Submission = sequelize.define('Submission', {
     status: {
         type: DataTypes.STRING,
         allowNull: false,
-        defaultValue: 'Pending'
-    }
+        defaultValue: 'Pending',
+    },
 });
 
-User.hasMany(Submission);
 Submission.belongsTo(User);
-
-Gig.hasMany(Submission);
 Submission.belongsTo(Gig);
 
 module.exports = Submission;

@@ -1,21 +1,20 @@
 // backend/models/Gig.js
+const { DataTypes } = require('sequelize');
+const { sequelize } = require('../config/db');
 
-const { Sequelize, DataTypes } = require('sequelize');
-const db = require('./index');
-
-const Gig = db.sequelize.define('Gig', {
+const Gig = sequelize.define('Gig', {
     title: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
     },
     description: {
         type: DataTypes.TEXT,
-        allowNull: false
+        allowNull: false,
     },
     date: {
         type: DataTypes.DATE,
-        allowNull: false
-    }
+        allowNull: false,
+    },
 });
 
 module.exports = Gig;
