@@ -18,10 +18,10 @@ const readUsers = () => {
 };
 
 // Save a new user to the CSV file
-const saveUser = (username, password) => {
+const saveUser = (username, password, email) => {
     return new Promise((resolve, reject) => {
-        const user = { username, password };
-        const csvData = `${user.username},${user.password}\n`;
+        const user = { username, password, email };
+        const csvData = `${user.username},${user.password},${user.email}\n`;
 
         fs.appendFile(filePath, csvData, (err) => {
             if (err) return reject(err);
