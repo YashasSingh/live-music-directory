@@ -5,9 +5,8 @@ const { readUsers, saveUser } = require('../utils/csvHandler');
 
 const router = express.Router();
 
-const CAPTCHA_SECRET = 'your-captcha-secret-key';
+const CAPTCHA_SECRET = process.env.RECAPTCHA_SECRET_KEY;
 
-// Login route
 router.post('/login', async (req, res) => {
     const { username, password } = req.body;
     if (username === 'admin' && password === 'admin') {
@@ -24,7 +23,6 @@ router.post('/login', async (req, res) => {
     }
 });
 
-// Signup route
 router.post('/signup', async (req, res) => {
     const { username, password, email, captcha } = req.body;
 
@@ -32,7 +30,6 @@ router.post('/signup', async (req, res) => {
         return res.status(400).json({ success: false, message: 'CAPTCHA is required' });
     }
 
-    // Verify CAPTCHA
     const verifyUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${CAPTCHA_SECRET}&response=${captcha}`;
     const response = await fetch(verifyUrl, { method: 'POST' });
     const captchaResult = await response.json();

@@ -1,5 +1,5 @@
 // frontend/src/components/Signup.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -50,7 +50,16 @@ const Signup = () => {
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
     const [captcha, setCaptcha] = useState('');
+    const [siteKey, setSiteKey] = useState('');
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchSiteKey = async () => {
+            const res = await axios.get('/api/recaptcha-site-key');
+            setSiteKey(res.data.siteKey);
+        };
+        fetchSiteKey();
+    }, []);
 
     const handleSignup = async () => {
         try {
@@ -85,10 +94,12 @@ const Signup = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                 />
-                <ReCAPTCHA
-                    sitekey="your-recaptcha-site-key"
-                    onChange={(value) => setCaptcha(value)}
-                />
+                {siteKey && (
+                    <ReCAPTCHA
+                        sitekey={siteKey}
+                        onChange={(value) => setCaptcha(value)}
+                    />
+                )}
                 <Button onClick={handleSignup}>Signup</Button>
             </Form>
         </SignupContainer>
