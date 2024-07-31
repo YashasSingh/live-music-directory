@@ -72,6 +72,16 @@ const simulateStatusUpdate = () => {
         }
     }, 10000); // Update every 10 seconds for demo purposes
 };
+// backend/server.js
+
+const testRoutes = require('./routes/test');
+
+// other code...
+
+app.use('/api/test', testRoutes);
+
+// other code...
+
 
 // Start server
 const PORT = process.env.PORT || 5000;

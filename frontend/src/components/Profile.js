@@ -24,48 +24,44 @@ const ProfileItem = styled.div`
     text-align: center;
 `;
 
-const SocialMediaLinks = styled.div`
-    margin: 1rem 0;
-    text-align: center;
-
-    a {
-        margin: 0 10px;
-    }
-`;
-
 const Profile = () => {
     const [profile, setProfile] = useState({});
-    const [editMode, setEditMode] = useState(false);
-    const [socialMediaLinks, setSocialMediaLinks] = useState({});
-    const [streamingData, setStreamingData] = useState({});
 
     const fetchProfile = async () => {
         const res = await axios.get('/api/profile', {
             headers: {
-                'x-auth-token': localStorage.getItem('token'),
-            },
+                'x-auth-token': localStorage.getItem('token')
+            }
         });
         setProfile(res.data);
-        setSocialMediaLinks(res.data.socialMediaLinks || {});
-        setStreamingData(res.data.streamingData || {});
     };
 
     useEffect(() => {
         fetchProfile();
     }, []);
 
-    const handleSave = async () => {
-        const res = await axios.put(
-            '/api/profile',
-            { socialMediaLinks, streamingData },
-            {
-                headers: {
-                    'x-auth-token': localStorage.getItem('token'),
-                },
+    const handleImageUpload = async (file) => {
+        const formData = new FormData();
+        formData.append('file', file);
+        const res = await axios.post('/api/profile/upload-image', formData, {
+            headers: {
+                'x-auth-token': localStorage.getItem('token'),
+                'Content-Type': 'multipart/form-data'
             }
-        );
+        });
         setProfile(res.data);
-        setEditMode(false);
+    };
+
+    const handleVideoUpload = async (file) => {
+        const formData = new FormData();
+        formData.append('file', file);
+        const res = await axios.post('/api/profile/upload-video', formData, {
+            headers: {
+                'x-auth-token': localStorage.getItem('token'),
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+        setProfile(res.data);
     };
 
     return (
@@ -81,108 +77,13 @@ const Profile = () => {
                 <a href={profile.video}>Watch Video</a>
             </ProfileItem>
             <ProfileItem>
-                <h3>Social Media Links</h3>
-                {editMode ? (
-                    <div>
-                        <input
-                            type="text"
-                            value={socialMediaLinks.facebook || ''}
-                            onChange={(e) =>
-                                setSocialMediaLinks({
-                                    ...socialMediaLinks,
-                                    facebook: e.target.value,
-                                })
-                            }
-                            placeholder="Facebook"
-                        />
-                        <input
-                            type="text"
-                            value={socialMediaLinks.twitter || ''}
-                            onChange={(e) =>
-                                setSocialMediaLinks({
-                                    ...socialMediaLinks,
-                                    twitter: e.target.value,
-                                })
-                            }
-                            placeholder="Twitter"
-                        />
-                        <input
-                            type="text"
-                            value={socialMediaLinks.instagram || ''}
-                            onChange={(e) =>
-                                setSocialMediaLinks({
-                                    ...socialMediaLinks,
-                                    instagram: e.target.value,
-                                })
-                            }
-                            placeholder="Instagram"
-                        />
-                    </div>
-                ) : (
-                    <SocialMediaLinks>
-                        {socialMediaLinks.facebook && (
-                            <a href={socialMediaLinks.facebook} target="_blank" rel="noopener noreferrer">
-                                Facebook
-                            </a>
-                        )}
-                        {socialMediaLinks.twitter && (
-                            <a href={socialMediaLinks.twitter} target="_blank" rel="noopener noreferrer">
-                                Twitter
-                            </a>
-                        )}
-                        {socialMediaLinks.instagram && (
-                            <a href={socialMediaLinks.instagram} target="_blank" rel="noopener noreferrer">
-                                Instagram
-                            </a>
-                        )}
-                    </SocialMediaLinks>
-                )}
+                <p>Social Media Links: {JSON.stringify(profile.socialMediaLinks)}</p>
             </ProfileItem>
             <ProfileItem>
-                <h3>Streaming Data</h3>
-                {editMode ? (
-                    <div>
-                        <input
-                            type="text"
-                            value={streamingData.spotify || ''}
-                            onChange={(e) =>
-                                setStreamingData({
-                                    ...streamingData,
-                                    spotify: e.target.value,
-                                })
-                            }
-                            placeholder="Spotify"
-                        />
-                        <input
-                            type="text"
-                            value={streamingData.soundcloud || ''}
-                            onChange={(e) =>
-                                setStreamingData({
-                                    ...streamingData,
-                                    soundcloud: e.target.value,
-                                })
-                            }
-                            placeholder="SoundCloud"
-                        />
-                    </div>
-                ) : (
-                    <div>
-                        {streamingData.spotify && (
-                            <p>Spotify: {streamingData.spotify}</p>
-                        )}
-                        {streamingData.soundcloud && (
-                            <p>SoundCloud: {streamingData.soundcloud}</p>
-                        )}
-                    </div>
-                )}
+                <p>Streaming Data: {JSON.stringify(profile.streamingData)}</p>
             </ProfileItem>
             <UploadFile type="image" onUpload={handleImageUpload} />
             <UploadFile type="video" onUpload={handleVideoUpload} />
-            {editMode ? (
-                <button onClick={handleSave}>Save</button>
-            ) : (
-                <button onClick={() => setEditMode(true)}>Edit</button>
-            )}
             <Comments profileId={profile.id} />
         </ProfileContainer>
     );
