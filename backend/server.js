@@ -4,12 +4,12 @@ const { Server } = require('socket.io');
 const path = require('path');
 const bodyParser = require('body-parser');
 const profileRoutes = require('./routes/profile');
-const profilesRoutes = require('./routes/profiles');
-const gigRoutes = require('./routes/gigs');
+const gigsRoutes = require('./routes/gigs');
 const submissionRoutes = require('./routes/submissions');
 const commentsRoutes = require('./routes/comments');
 const authRoutes = require('./routes/auth');
-
+const spotifyRoutes = require('./routes/spotify');
+const likesRoutes = require('./routes/likes');
 require('dotenv').config();
 
 const app = express();
@@ -21,11 +21,12 @@ app.use(bodyParser.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use('/api/profile', profileRoutes);
-app.use('/api/profiles', profilesRoutes);
-app.use('/api/gigs', gigRoutes);
+app.use('/api/gigs', gigsRoutes);
 app.use('/api/submissions', submissionRoutes);
 app.use('/api/comments', commentsRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/likes', likesRoutes);
+app.use('/api/spotify', spotifyRoutes);
 
 app.get('/api/recaptcha-site-key', (req, res) => {
     res.json({ siteKey: process.env.RECAPTCHA_SITE_KEY });
@@ -62,14 +63,7 @@ const simulateStatusUpdate = () => {
     }, 10000);
 };
 
-const spotifyRoutes = require('./routes/spotify');
-const likesRoutes = require('./routes/likes');
 
-app.use('/api/likes', likesRoutes);
-app.use('/api/spotify', spotifyRoutes);
 
 const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => {
-    console.log(`Server started on port ${PORT}`);
-    simulateStatusUpdate();
-});
+server.listen(PORT, () => console.log(`Server started on port ${PORT}`));

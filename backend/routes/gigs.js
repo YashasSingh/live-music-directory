@@ -1,15 +1,12 @@
-// backend/routes/gigs.js
-
 const express = require('express');
-const auth = require('../middleware/auth');
-const Gig = require('../models/Gig');
+const { readGigs, saveGig } = require('../utils/gigHandler');
 
 const router = express.Router();
 
 // Get all gigs
 router.get('/', async (req, res) => {
     try {
-        const gigs = await Gig.findAll();
+        const gigs = await readGigs();
         res.json(gigs);
     } catch (err) {
         console.error(err.message);
@@ -18,11 +15,11 @@ router.get('/', async (req, res) => {
 });
 
 // Create a new gig
-router.post('/', auth, async (req, res) => {
-    const { title, description, date } = req.body;
+router.post('/', async (req, res) => {
+    const { title, description, date, location } = req.body;
 
     try {
-        const gig = await Gig.create({ title, description, date });
+        const gig = await saveGig(title, description, date, location);
         res.json(gig);
     } catch (err) {
         console.error(err.message);
