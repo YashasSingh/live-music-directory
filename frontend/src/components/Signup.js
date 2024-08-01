@@ -48,21 +48,14 @@ const Signup = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
-    const [captcha, setCaptcha] = useState('');
-    const [siteKey, setSiteKey] = useState('');
+
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const fetchSiteKey = async () => {
-            const res = await axios.get('/api/recaptcha-site-key');
-            setSiteKey(res.data.siteKey);
-        };
-        fetchSiteKey();
-    }, []);
+
 
     const handleSignup = async () => {
         try {
-            const res = await axios.post('/api/auth/signup', { username, password, email, captcha });
+            const res = await axios.post('/api/auth/signup', { username, password, email });
             if (res.data.success) {
                 navigate('/login');
             } else {
@@ -95,12 +88,7 @@ const Signup = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                 />
-                {siteKey && (
-                    <ReCAPTCHA
-                        sitekey={siteKey}
-                        onChange={(value) => setCaptcha(value)}
-                    />
-                )}
+
                 <Button onClick={handleSignup}>Signup</Button>
             </Form>
         </SignupContainer>
