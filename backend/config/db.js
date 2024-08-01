@@ -1,21 +1,18 @@
 // backend/config/db.js
 
-const { Sequelize } = require('sequelize');
-const path = require('path');
+var Sequelize = require('sequelize');
 
-// SQLite connection
-const sequelize = new Sequelize({
-    dialect: 'sqlite',
-    storage: path.join(__dirname, 'database.sqlite')
+var sequelize = new Sequelize('randomdb', 'root', 'root', {
+    host: 'localhost',
+    dialect: 'mysql',
+    port : 8889,
+
+    pool: {
+        max: 5,
+        min: 0,
+        idle: 10000
+    }
 });
 
-const connectDB = async () => {
-    try {
-        await sequelize.authenticate();
-        console.log('Database connected successfully');
-    } catch (error) {
-        console.error('Unable to connect to the database:', error);
-    }
-};
-
-module.exports = { sequelize, connectDB };
+exports.sequelize = sequelize;
+module.exports = Sequelize;

@@ -11,6 +11,7 @@ const gigRoutes = require('./routes/gigs');
 const submissionRoutes = require('./routes/submissions');
 const commentsRoutes = require('./routes/comments');
 const authRoutes = require('./routes/auth');
+const { Submission } = require('./models/Submission'); // Import Submission model
 
 require('dotenv').config();
 

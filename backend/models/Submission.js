@@ -1,15 +1,20 @@
-// backend/models/Submission.js
-const { DataTypes } = require('sequelize');
-const { sequelize } = require('../config/db');
-const User = require('./User');
-const Gig = require('./Gig');
+const { Sequelize, DataTypes } = require('sequelize');
+const sequelize = require('../config/db'); // Adjust the path if necessary
 
 const Submission = sequelize.define('Submission', {
+    // Define your model attributes here
+    UserId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    GigId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
     status: {
         type: DataTypes.STRING,
-        allowNull: false,
-        defaultValue: 'Pending',
-    },
+        defaultValue: 'Pending'
+    }
 });
 
 Submission.belongsTo(User);

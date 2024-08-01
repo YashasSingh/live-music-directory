@@ -1,36 +1,34 @@
-// backend/utils/csvHandler.js
 const fs = require('fs');
 const path = require('path');
 const csv = require('csv-parser');
+const { v4: uuidv4 } = require('uuid');
 
-const filePath = path.join(__dirname, '..', 'data', 'users.csv');
+const submissionsFilePath = path.join(__dirname, '..', 'data', 'submissions.csv');
 
-// Read all users from the CSV file
-const readUsers = () => {
+const readSubmissions = () => {
     return new Promise((resolve, reject) => {
-        const users = [];
-        fs.createReadStream(filePath)
+        const submissions = [];
+        fs.createReadStream(submissionsFilePath)
             .pipe(csv())
-            .on('data', (row) => users.push(row))
-            .on('end', () => resolve(users))
+            .on('data', (row) => submissions.push(row))
+            .on('end', () => resolve(submissions))
             .on('error', (err) => reject(err));
     });
 };
 
-// Save a new user to the CSV file
-const saveUser = (username, password, email) => {
+const saveSubmission = (userId, gigId, status = 'Pending') => {
     return new Promise((resolve, reject) => {
-        const user = { username, password, email };
-        const csvData = `${user.username},${user.password},${user.email}\n`;
+        const submission = { id: uuidv4(), userId, gigId, status };
+        const csvData = `${submission.id},${submission.userId},${submission.gigId},${submission.status}\n`;
 
-        fs.appendFile(filePath, csvData, (err) => {
+        fs.appendFile(submissionsFilePath, csvData, (err) => {
             if (err) return reject(err);
-            resolve();
+            resolve(submission);
         });
     });
 };
 
 module.exports = {
-    readUsers,
-    saveUser
+    readSubmissions,
+    saveSubmission
 };
