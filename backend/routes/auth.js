@@ -1,6 +1,6 @@
 // backend/routes/auth.js
 const express = require('express');
-const fetch = require('node-fetch');
+const { fetch } = require('node-fetch');
 const { readUsers, saveUser } = require('../utils/csvHandler');
 
 const router = express.Router();

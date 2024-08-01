@@ -1,4 +1,3 @@
-// frontend/src/components/Signup.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -66,6 +65,8 @@ const Signup = () => {
             const res = await axios.post('/api/auth/signup', { username, password, email, captcha });
             if (res.data.success) {
                 navigate('/login');
+            } else {
+                console.error(res.data.message);
             }
         } catch (err) {
             console.error(err.response.data.message);
