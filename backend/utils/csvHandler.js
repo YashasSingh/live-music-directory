@@ -3,32 +3,34 @@ const path = require('path');
 const csv = require('csv-parser');
 const { v4: uuidv4 } = require('uuid');
 
-const submissionsFilePath = path.join(__dirname, '..', 'data', 'submissions.csv');
+const usersFilePath = path.join(__dirname, '..', 'data', 'users.csv');
 
-const readSubmissions = () => {
+// Read all users from the CSV file
+const readUsers = () => {
     return new Promise((resolve, reject) => {
-        const submissions = [];
-        fs.createReadStream(submissionsFilePath)
+        const users = [];
+        fs.createReadStream(usersFilePath)
             .pipe(csv())
-            .on('data', (row) => submissions.push(row))
-            .on('end', () => resolve(submissions))
+            .on('data', (row) => users.push(row))
+            .on('end', () => resolve(users))
             .on('error', (err) => reject(err));
     });
 };
 
-const saveSubmission = (userId, gigId, status = 'Pending') => {
+// Save a new user to the CSV file
+const saveUser = (name, email, password, bio = '', bandPicture = '', video = '', socialMediaLinks = '{}', streamingData = '{}') => {
     return new Promise((resolve, reject) => {
-        const submission = { id: uuidv4(), userId, gigId, status };
-        const csvData = `${submission.id},${submission.userId},${submission.gigId},${submission.status}\n`;
+        const user = { id: uuidv4(), name, email, password, bio, bandPicture, video, socialMediaLinks, streamingData };
+        const csvData = `${user.id},${user.name},${user.email},${user.password},${user.bio},${user.bandPicture},${user.video},${JSON.stringify(user.socialMediaLinks)},${JSON.stringify(user.streamingData)}\n`;
 
-        fs.appendFile(submissionsFilePath, csvData, (err) => {
+        fs.appendFile(usersFilePath, csvData, (err) => {
             if (err) return reject(err);
-            resolve(submission);
+            resolve(user);
         });
     });
 };
 
 module.exports = {
-    readSubmissions,
-    saveSubmission
+    readUsers,
+    saveUser
 };

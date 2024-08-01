@@ -1,20 +1,15 @@
-// backend/routes/submissions.js
-
 const express = require('express');
 const auth = require('../middleware/auth');
-const Submission = require('../models/Submission');
-const Gig = require('../models/Gig');
+const { readSubmissions, saveSubmission } = require('../utils/csvHandler');
 
 const router = express.Router();
 
 // Get all submissions for a user
 router.get('/', auth, async (req, res) => {
     try {
-        const submissions = await Submission.findAll({
-            where: { UserId: req.user.id },
-            include: [Gig]
-        });
-        res.json(submissions);
+        const submissions = await readSubmissions();
+        const userSubmissions = submissions.filter(submission => submission.userId === req.user.id);
+        res.json(userSubmissions);
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server error');
@@ -26,10 +21,7 @@ router.post('/', auth, async (req, res) => {
     const { gigId } = req.body;
 
     try {
-        const submission = await Submission.create({
-            UserId: req.user.id,
-            GigId: gigId
-        });
+        const submission = await saveSubmission(req.user.id, gigId);
         res.json(submission);
     } catch (err) {
         console.error(err.message);

@@ -1,17 +1,14 @@
-// backend/server.js
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const path = require('path');
 const bodyParser = require('body-parser');
-const { sequelize } = require('./config/db');
 const profileRoutes = require('./routes/profile');
 const profilesRoutes = require('./routes/profiles');
 const gigRoutes = require('./routes/gigs');
 const submissionRoutes = require('./routes/submissions');
 const commentsRoutes = require('./routes/comments');
 const authRoutes = require('./routes/auth');
-const { Submission } = require('./models/Submission'); // Import Submission model
 
 require('dotenv').config();
 
@@ -55,11 +52,11 @@ const notifyStatusUpdate = (submission) => {
 
 const simulateStatusUpdate = () => {
     setInterval(async () => {
-        const submissions = await Submission.findAll();
+        const submissions = await readSubmissions();
         if (submissions.length > 0) {
             const submission = submissions[Math.floor(Math.random() * submissions.length)];
             submission.status = submission.status === 'Pending' ? 'Approved' : 'Pending';
-            await submission.save();
+            await saveSubmission(submission.userId, submission.gigId, submission.status);
             notifyStatusUpdate(submission);
         }
     }, 10000);
@@ -72,7 +69,7 @@ app.use('/api/likes', likesRoutes);
 app.use('/api/spotify', spotifyRoutes);
 
 const PORT = process.env.PORT || 5000;
-sequelize.sync().then(() => {
-    server.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+server.listen(PORT, () => {
+    console.log(`Server started on port ${PORT}`);
     simulateStatusUpdate();
 });
