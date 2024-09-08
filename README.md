@@ -1,8 +1,9 @@
 
 # Live Music Booking CRM
+![Screenshot 2024-09-07 212132](https://github.com/user-attachments/assets/b9050048-d53b-4958-8cd3-19d0a58af0c8)
+
 
 ## Overview
-
 The Live Music Booking CRM is a web application designed to manage live music event bookings between independent venues and performing artists or bands. It allows users to create, update, and manage bookings, track sales and event performance data, and provides various optional features such as user roles, automated notifications, and advanced analytics.
 
 ## Features
